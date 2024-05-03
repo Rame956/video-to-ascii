@@ -3,8 +3,21 @@ import numpy as np
 import time
 import sys
 import shutil
+from moviepy.editor import VideoFileClip
+import pygame
 
 ASCII_CHARS = '@%#*+=-:. '
+
+def extract_audio(video_file, output_audio_file):
+    video_clip = VideoFileClip(video_file)
+    audio_clip = video_clip.audio
+    audio_clip.write_audiofile(output_audio_file)
+
+def play_audio(audio_file):
+    pygame.init()
+    pygame.mixer.init()
+    pygame.mixer.music.load(audio_file)
+    pygame.mixer.music.play()
 
 def image_to_ascii(image, ascii_width, ascii_height):
     grayscale_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -39,5 +52,8 @@ def video_to_ascii(video_file, fps=60):
         
     cap.release()
 
-video_file = 'test4.mp4'
+video_file = 'test.mp4'
+output_audio_file = 'audio.wav'
+extract_audio(video_file, output_audio_file)
+play_audio(output_audio_file)
 video_to_ascii(video_file)
