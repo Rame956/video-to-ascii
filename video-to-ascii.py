@@ -7,6 +7,7 @@ from moviepy.editor import VideoFileClip
 import pygame
 
 ASCII_CHARS = '@%#*+=-:. '
+output_audio_file = 'audio.wav'
 
 def extract_audio(video_file, output_audio_file):
     video_clip = VideoFileClip(video_file)
@@ -17,6 +18,7 @@ def play_audio(audio_file):
     pygame.init()
     pygame.mixer.init()
     pygame.mixer.music.load(audio_file)
+    time.sleep(1)
     pygame.mixer.music.play()
 
 def image_to_ascii(image, ascii_width, ascii_height):
@@ -33,13 +35,13 @@ def image_to_ascii(image, ascii_width, ascii_height):
     
     return ascii_str
 
-def video_to_ascii(video_file, fps=60):
+def video_to_ascii(video_file, fps=120):
     cap = cv2.VideoCapture(video_file)
     delay = 1 / fps
     terminal_width, terminal_height = shutil.get_terminal_size()
     ascii_width = terminal_width - 1
     max_ascii_height = min(terminal_height, int(ascii_width / (cap.get(cv2.CAP_PROP_FRAME_WIDTH) / cap.get(cv2.CAP_PROP_FRAME_HEIGHT))))
-    
+    play_audio(output_audio_file)
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -53,7 +55,5 @@ def video_to_ascii(video_file, fps=60):
     cap.release()
 
 video_file = 'test.mp4'
-output_audio_file = 'audio.wav'
 extract_audio(video_file, output_audio_file)
-play_audio(output_audio_file)
 video_to_ascii(video_file)
